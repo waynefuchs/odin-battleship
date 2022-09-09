@@ -8,7 +8,7 @@ class Ship {
 
   hit = (position) => {
     if (position < this.length && position >= 0) this.hits |= 1 << position;
-    else throw new Error('Hit position out of bounds');
+    else throw new Error("Hit position out of bounds");
   };
 }
 
