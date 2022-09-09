@@ -13,3 +13,8 @@ test('Ship class exists', () => {
 test('Ship has a length property', () => {
   expect(ship.length).toBe(3);
 })
+
+test('Ship can take a hit', () => {
+  ship.hit(2);
+  expect(ship.hits).toBe(0b100);
+})
