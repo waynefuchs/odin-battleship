@@ -18,3 +18,7 @@ test('Ship can take a hit', () => {
   ship.hit(2);
   expect(ship.hits).toBe(0b100);
 })
+
+test('Ship hits out of bounds throw an error', () => {
+  expect(() => ship.hit(3)).toThrow(Error);
+})
