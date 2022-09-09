@@ -15,8 +15,7 @@ const shipCellIds = (board, ship) =>
 const overlap = (shipA, shipB) =>
   shipA.positions.some((position) => shipB.positions.includes(position));
 
-const isHit = (x, y, ship) => 
-  ship.positions.some(position => ship)
+const isHit = (x, y, ship) => ship.positions.some((position) => ship);
 
 class GameBoard {
   width;
@@ -49,6 +48,16 @@ class GameBoard {
     this.ships.push(shipObj);
     this.shipCount = this.ships.length;
   };
+
+  receiveAttack(x, y) {
+    if (!this.ships.some(ship => isHit(x, y, ship))) {
+      // miss
+      return false;
+    } else {
+      const ship = this.ships.find(ship => isHit(x, y, ship));
+      return ship;
+    }
+  }
 }
 
 module.exports = GameBoard;
