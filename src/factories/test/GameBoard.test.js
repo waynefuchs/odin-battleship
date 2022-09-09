@@ -38,6 +38,6 @@ test('Test if ships overlap', () => {
 test('Ship can receive attack', () => {
   board.place(ship, 1, 0);
   expect(board.receiveAttack(0, 0)).toBe(false);
-  const hitShip = board.receiveAttack(0, 1);
-  expect(hitShip.ship.hits).toBe(1);
+  const hit = board.receiveAttack(1, 0);
+  expect(hit.ship.hits).toBe(1);
 })
