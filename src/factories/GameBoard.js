@@ -1,6 +1,20 @@
 const GAME_BOARD_WIDTH = 10;
 const GAME_BOARD_HEIGHT = 10;
 
+// const collides = (length, x, y, vertical=false) => {
+//   return vertical
+//     ?
+//     : ;
+// }
+
+const shipCellIds = (board, ship) => 
+  [...Array(ship.length).keys()].map((n) => n + board.width * ship.y + ship.x);
+
+const overlap = (shipA, shipB) => {
+  return shipA.positions.filter(position => shipB.positions.includes(position));
+};  
+
+
 class GameBoard {
   width;
   height;
@@ -20,7 +34,9 @@ class GameBoard {
       (vertical && ship.length + y >= this.height)
     )
       throw new Error("Ship can not extend out of bounds.");
-    this.ships.push({ ship, x, y });
+
+    const shipObj = { ship, x, y, positions:shipCellIds(this, {length: ship.length, x, y}) };
+    this.ships.push(shipObj);
     this.shipCount += 1;
   };
 }

@@ -29,3 +29,8 @@ test('Placing ship out of bounds throws error', () => {
   expect(() => board.place(ship, 0, 7, true)).toThrow(Error);
   expect(board.shipCount).toBe(2);
 });
+
+test('Test if ships overlap', () => {
+  board.place(ship, 0, 0);
+  expect(() => board.place(ship, 1, 0)).toThrow(Error);
+})
