@@ -15,8 +15,11 @@ class GameBoard {
   }
 
   place = (ship, x, y, vertical = false) => {
-    if (vertical ? ship.length + y > this.height : ship.width + x > this.width)
-      throw new Error("Ship can not be placed out of bounds.");
+    if (
+      (!vertical && ship.length + x >= this.width) ||
+      (vertical && ship.length + y >= this.height)
+    )
+      throw new Error("Ship can not extend out of bounds.");
     this.ships.push({ ship, x, y });
     this.shipCount += 1;
   };
