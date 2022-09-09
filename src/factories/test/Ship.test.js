@@ -20,5 +20,9 @@ test('Ship can take a hit', () => {
 })
 
 test('Ship hits out of bounds throw an error', () => {
+  expect(() => ship.hit(-1)).toThrow(Error);
+  expect(() => ship.hit(0)).not.toThrow(Error);
+  expect(() => ship.hit(1)).not.toThrow(Error);
+  expect(() => ship.hit(2)).not.toThrow(Error);
   expect(() => ship.hit(3)).toThrow(Error);
 })
