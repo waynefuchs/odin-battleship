@@ -58,8 +58,8 @@ class GameBoard {
     } else {
       const ship = this.ships.find((ship) => isHit(x, y, this, ship));
       const position = ship.vertical
-        ? ship.y - y
-        : ship.x - x;
+        ? y - ship.y
+        : x - ship.x;
       ship.ship.hit(position);
       return ship;
     }
