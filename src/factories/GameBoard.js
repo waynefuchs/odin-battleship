@@ -78,6 +78,7 @@ const attackShip = (board, x, y) => {
   const ship = board.ships.find((ship) => isHit(board, ship, x, y));
   const position = ship.vertical ? y - ship.y : x - ship.x;
   ship.ship.hit(position);
+  board.hits.push(cellId(x, y, board.width));
   return ship;
 };
 

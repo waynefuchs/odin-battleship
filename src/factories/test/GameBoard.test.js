@@ -61,18 +61,34 @@ test("Misses are tracked", () => {
 });
 
 test("Hits are tracked", () => {
+  // No hits should register on a fresh board
   expect(board.hits.length).toBe(0);
+
+  // Place a ship at (0, 0) and attack (1, 0) = middle of ship "SXSOOOOOOO"
   board.place(ship, 0, 0);
   let hit = board.receiveAttack(1, 0);
-  expect(hit.ship.hits).toBe(1);
-  expect(board.hits.at(0)).toBe(1);
+  expect(hit.ship.hits).toBe(0b010);
+  expect(board.hits.at(0)).toBe(1); // id(1,0) = 1
+  expect(board.hits.length).toBe(1);
+
+  // Attack the ship a second time "XXSOOOOOOO"
   hit = board.receiveAttack(0, 0);
-  expect(hit.ship.hits).toBe(2);
-  expect(board.hits.at(1)).toBe(0);
+  expect(hit.ship.hits).toBe(0b011);
+  expect(board.hits.at(1)).toBe(0); // id(0,1) = 0
+  expect(board.hits.length).toBe(2);
+
+  // Place a second ship directly below the first
+  ship = new Ship(3); // <-- important, otherwise the previous ship is cloned
   board.place(ship, 0, 1);
   hit = board.receiveAttack(0, 1);
-  expect(hit.ship.hits).toBe(1);
+  expect(hit.ship.hits).toBe(0b001);
   expect(board.hits.at(2)).toBe(10);
+  expect(board.hits.length).toBe(3);
+
+  // Miss a shot to ensure that a hit is not added
+  hit = board.receiveAttack(3, 0);
+  expect(hit).toBe(false);
+  expect(board.hits.length).toBe(3);
 })
 
 test("Board correctly reports whether all ships have sunk", () => {
