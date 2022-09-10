@@ -35,7 +35,7 @@ test('Test if ships overlap', () => {
   expect(() => board.place(ship, 1, 0)).toThrow(Error);
 })
 
-test('Ship can receive attack', () => {
+test('Ship can receive attack and ship can sink', () => {
   // miss
   board.place(ship, 1, 0);
   expect(board.receiveAttack(0, 0)).toBe(false);
