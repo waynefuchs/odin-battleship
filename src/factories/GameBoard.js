@@ -43,6 +43,10 @@ class GameBoard {
   };
 
   availableForAttack = (x, y) =>
+    x >= 0 &&
+    x < this.width &&
+    y >= 0 &&
+    y < this.height &&
     this.available.includes(cellId(x, y, this.width));
 }
 
