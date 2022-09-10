@@ -6,6 +6,7 @@ class GameBoard {
   height;
   misses;
   ships;
+  available;
 
   constructor() {
     this.width = GAME_BOARD_WIDTH;
@@ -13,6 +14,7 @@ class GameBoard {
     this.misses = [];
     this.hits = [];
     this.ships = [];
+    this.available = [...Array(this.width * this.height).keys()];
   }
 
   place = (ship, x, y, vertical = false) => {
@@ -31,6 +33,17 @@ class GameBoard {
   haveAllShipsBeenDestroyed = () =>
     this.ships.every((shipObj) => shipObj.ship.isSunk()) &&
     this.ships.length > 0;
+
+  removeFromAvailable = (x, y) => {
+    const coordId = cellId(x, y, this.width);
+    const newArray = this.available.filter((id) => id !== coordId);
+    if (newArray.length === this.available.length)
+      throw new Error("Failed to remove from available list of ids");
+    this.available = newArray;
+  };
+
+  availableForAttack = (x, y) =>
+    this.available.includes(cellId(x, y, this.width));
 }
 
 const cellId = (x, y, boardWidth) => boardWidth * y + x;
@@ -73,6 +86,7 @@ const addMissToBoard = (board, x, y) => {
   if (board.misses.includes(missId))
     throw new Error("Miss already registered at this location");
   board.misses.push(missId);
+  board.removeFromAvailable(x, y);
 };
 
 const addShipToBoard = (board, newShipObj) => {
@@ -84,6 +98,7 @@ const attackShip = (board, x, y) => {
   const position = ship.vertical ? y - ship.y : x - ship.x;
   ship.ship.hit(position);
   board.hits.push(cellId(x, y, board.width));
+  board.removeFromAvailable(x, y);
   return ship;
 };
 

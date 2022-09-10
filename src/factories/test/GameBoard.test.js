@@ -38,21 +38,27 @@ test("Test if ships overlap", () => {
 test("Ship can receive attack and ship can sink", () => {
   // miss
   board.place(ship, 1, 0);
+  expect(board.availableForAttack(0, 0)).toBe(true);
   expect(board.receiveAttack(0, 0)).toBe(false);
-
+  expect(board.availableForAttack(0, 0)).toBe(false);
+  
   // hit 1
   let hit = board.receiveAttack(1, 0);
   expect(hit.ship.hits).toBe(1);
-
+  expect(board.availableForAttack(1, 0)).toBe(false);
+  expect(board.availableForAttack(2, 0)).toBe(true);
+  
   // hit 2
   hit = board.receiveAttack(2, 0);
   expect(hit.ship.hits).toBe(3);
   expect(hit.ship.isSunk()).toBe(false);
-
+  expect(board.availableForAttack(2, 0)).toBe(false);
+  
   // hit 3
   hit = board.receiveAttack(3, 0);
   expect(hit.ship.hits).toBe(7);
   expect(hit.ship.isSunk()).toBe(true);
+  expect(board.availableForAttack(3, 0)).toBe(false);
 });
 
 test("Misses are tracked", () => {

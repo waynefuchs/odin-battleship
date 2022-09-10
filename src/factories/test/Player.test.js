@@ -2,13 +2,13 @@ const AI = require("../AI");
 const Human = require("../Human");
 const Player = require("../Player");
 
-let player;
 
 
 /**
  * BASE PLAYER CLASS TESTS
  */
 describe('Base class testing', () => {
+  let player;
   beforeEach(() => {
     player = new Player();
   });
@@ -29,13 +29,16 @@ describe('Base class testing', () => {
  * AI TESTS
  */
 describe('AI tests', () => {
+  let ai;
+
   beforeEach(() => {
-    player = new AI();
+    ai = new AI();
   });
   
 
   test("AI initializes", () => {
-    expect(player).not.toBeNull();
+    expect(ai).not.toBeNull();
+    expect(ai.board.ships.length).toBe(5);
   })
 })
 

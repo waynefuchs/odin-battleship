@@ -5,11 +5,13 @@ class Player {
   board;
   unplacedShips;
   isAi;
+  isReady;
 
   constructor(board = null, ai = false) {
     this.board = board ?? new GameBoard();
     this.isAi = ai;
     this.unplacedShips = [];
+    this.isReady = false;
   }
 }
 
