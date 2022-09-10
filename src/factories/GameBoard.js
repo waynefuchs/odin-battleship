@@ -1,24 +1,6 @@
 const GAME_BOARD_WIDTH = 10;
 const GAME_BOARD_HEIGHT = 10;
 
-// const collides = (length, x, y, vertical=false) => {
-//   return vertical
-//     ?
-//     : ;
-// }
-
-const cellId = (x, y, board) => board.width * y + x;
-
-const shipCellIds = (board, ship) =>
-  [...Array(ship.length).keys()].map((n) => n + cellId(ship.x, ship.y, board));
-
-const overlap = (shipA, shipB) =>
-  shipA.positions.some((position) => shipB.positions.includes(position));
-
-const isHit = (x, y, board, ship) => {
-  return ship.positions.includes(cellId(x, y, board));
-};
-
 class GameBoard {
   width;
   height;
@@ -33,37 +15,64 @@ class GameBoard {
   }
 
   place = (ship, x, y, vertical = false) => {
-    const isOutOfBounds = vertical
-      ? ship.length + y > this.height
-      : ship.length + x > this.width;
-    if (isOutOfBounds) throw new Error("Ship can not extend out of bounds.");
-
-    const positions = shipCellIds(this, { length: ship.length, x, y });
-    const shipObj = { ship, x, y, positions };
-
-    const isOverlappingPlacedShips = this.ships.some((placedShip) =>
-      overlap(placedShip, shipObj)
-    );
-    if (isOverlappingPlacedShips)
-      throw new Error("Ship overlaps and could not be placed");
-
-    this.ships.push(shipObj);
-    this.shipCount = this.ships.length;
+    const newShipObj = getShipObject(ship, x, y, this.width);
+    checkForOutOfBoundsPlacement(this, vertical, ship, y, x);
+    checkShipsForOverlap(this, newShipObj);
+    addShipToBoard(this, newShipObj);
   };
 
   receiveAttack(x, y) {
-    if (!this.ships.some((ship) => isHit(x, y, this, ship))) {
-      // miss
-      return false;
-    } else {
-      const ship = this.ships.find((ship) => isHit(x, y, this, ship));
-      const position = ship.vertical
-        ? y - ship.y
-        : x - ship.x;
-      ship.ship.hit(position);
-      return ship;
-    }
+    if (doesAttackHit(this, x, y)) return attackShip(this, x, y);
+    // register a miss
+    return false;
   }
 }
+
+const cellId = (x, y, boardWidth) => boardWidth * y + x;
+
+const shipCellIds = (boardWidth, ship) => {
+  const range = [...Array(ship.length).keys()];
+  return range.map((n) => n + cellId(ship.x, ship.y, boardWidth));
+};
+
+const isHit = (board, ship, x, y) =>
+  ship.positions.includes(cellId(x, y, board.width));
+
+const doesAttackHit = (board, x, y) =>
+  board.ships.some((ship) => isHit(board, ship, x, y));
+
+const getShipObject = (ship, x, y, boardWidth) => {
+  const positions = shipCellIds(boardWidth, { length: ship.length, x, y });
+  const shipObj = { ship, x, y, positions };
+  return shipObj;
+};
+
+const checkForOutOfBoundsPlacement = (board, vertical, ship, y, x) => {
+  const isOutOfBounds = vertical
+    ? ship.length + y > board.height
+    : ship.length + x > board.width;
+  if (isOutOfBounds) throw new Error("Ship can not extend out of play area");
+};
+
+const checkShipsForOverlap = (board, newShipObj) => {
+  if (board.ships.some((inPlayObj) => doShipsOverlap(inPlayObj, newShipObj)))
+    throw new Error("Ship overlaps another vessel and could not be placed");
+};
+
+const doShipsOverlap = (shipA, shipB) => {
+  return shipA.positions.some((position) => shipB.positions.includes(position));
+};
+
+const addShipToBoard = (board, newShipObj) => {
+  board.ships.push(newShipObj);
+  board.shipCount = board.ships.length;
+};
+
+const attackShip = (board, x, y) => {
+  const ship = board.ships.find((ship) => isHit(board, ship, x, y));
+  const position = ship.vertical ? y - ship.y : x - ship.x;
+  ship.ship.hit(position);
+  return ship;
+};
 
 module.exports = GameBoard;
