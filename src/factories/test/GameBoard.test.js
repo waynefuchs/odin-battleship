@@ -92,5 +92,31 @@ test("Hits are tracked", () => {
 })
 
 test("Board correctly reports whether all ships have sunk", () => {
-  expect(false).toBe(false);
+  // Edge case where no ships exist and can therefore not be destroyed
+  expect(board.haveAllShipsBeenDestroyed()).toBe(false);
+
+  // Add a single ship
+  board.place(ship, 0, 0);
+  expect(board.haveAllShipsBeenDestroyed()).toBe(false);
+  
+  // Destroy most of it
+  board.receiveAttack(0, 0);
+  board.receiveAttack(1, 0);
+  expect(board.haveAllShipsBeenDestroyed()).toBe(false);
+  
+  // Finish it off
+  board.receiveAttack(2, 0);
+  expect(board.haveAllShipsBeenDestroyed()).toBe(true);
+  
+  // Add a second ship, not all ships are destroyed now
+  ship = new Ship(5);
+  board.place(ship, 5, 9);
+  expect(board.haveAllShipsBeenDestroyed()).toBe(false);
+  board.receiveAttack(5, 9);
+  board.receiveAttack(6, 9);
+  board.receiveAttack(7, 9);
+  board.receiveAttack(8, 9);
+  expect(board.haveAllShipsBeenDestroyed()).toBe(false);
+  board.receiveAttack(9, 9);
+  expect(board.haveAllShipsBeenDestroyed()).toBe(true);
 });
