@@ -20,7 +20,7 @@ class GameBoard {
   }
 
   place = (ship, x, y, vertical = false) => {
-    const newShipObj = getShipObject(ship, x, y, vertical, this.width);
+    const newShipObj = getShipObject(ship, x, y, vertical, this);
     checkForOutOfBoundsPlacement(this, vertical, ship, y, x);
     checkShipsForOverlap(this, newShipObj);
     addShipToBoard(this, newShipObj);
@@ -47,46 +47,45 @@ class GameBoard {
   }
 
   isHit = (x, y) => doesAttackHit(this, x, y);
+  cellId = (x, y) => this.width * y + x;
 }
 
 // Private Functions
 const removeFromAvailable = (board, x, y) => {
-  const coordId = cellId(x, y, board.width);
+  const coordId = board.cellId(x, y);
   const newArray = board.available.filter((id) => id !== coordId);
   if (newArray.length === board.available.length)
     throw new Error("Failed to remove from available list of ids");
   board.available = newArray;
 };
 
-const cellId = (x, y, boardWidth) => boardWidth * y + x;
-
 const idToXY = (id, boardWidth) => [
   id % boardWidth,
   Math.floor(id / boardWidth),
 ];
 
-const shipCellIds = (boardWidth, shipObj) => {
+const shipCellIds = (board, shipObj) => {
   if (shipObj.vertical === undefined)
     throw new Error("Ship vertical specification must be defined");
-  const startId = cellId(shipObj.x, shipObj.y, boardWidth);
+  const startId = board.cellId(shipObj.x, shipObj.y);
   return shipObj.vertical
     ? [...Array(shipObj.length)].fill(startId).map((n, i) => n + i * 10)
     : [...Array(shipObj.length).keys()].map((n) => n + startId);
 };
 
 const isHit = (board, shipObj, x, y) =>
-  shipObj.positions.includes(cellId(x, y, board.width));
+  shipObj.positions.includes(board.cellId(x, y));
 
 const doesAttackHit = (board, x, y) => {
-  const isAvailable = board.available.includes(cellId(x, y, board.width));
+  const isAvailable = board.available.includes(board.cellId(x, y));
   const isShipThere = board.ships.some((shipObj) =>
     isHit(board, shipObj, x, y)
   );
   return isAvailable && isShipThere;
 };
 
-const getShipObject = (ship, x, y, vertical, boardWidth) => {
-  const positions = shipCellIds(boardWidth, {
+const getShipObject = (ship, x, y, vertical, board) => {
+  const positions = shipCellIds(board, {
     length: ship.length,
     x,
     y,
@@ -113,7 +112,7 @@ const doShipsOverlap = (shipA, shipB) => {
 };
 
 const addMissToBoard = (board, x, y) => {
-  const missId = cellId(x, y, board.width);
+  const missId = board.cellId(x, y);
   if (board.misses.includes(missId))
     throw new Error("Miss already registered at this location");
   board.misses.push(missId);
@@ -128,7 +127,7 @@ const attackShip = (board, x, y) => {
   const ship = board.ships.find((ship) => isHit(board, ship, x, y));
   const position = ship.vertical ? y - ship.y : x - ship.x;
   ship.ship.hit(position);
-  board.hits.push(cellId(x, y, board.width));
+  board.hits.push(board.cellId(x, y));
   removeFromAvailable(board, x, y);
   return ship;
 };
