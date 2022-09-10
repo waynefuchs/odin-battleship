@@ -1,4 +1,5 @@
 const Player = require("./Player");
+const Ship = require("./Ship");
 
 const names = [
   "Bjorn Toulouse",
@@ -25,6 +26,11 @@ const names = [
 class AI extends Player {
   constructor() {
     super(null, true);
+    this.unplacedShips.push(new Ship(5, 'Carrier'));
+    this.unplacedShips.push(new Ship(4, 'Battleship'));
+    this.unplacedShips.push(new Ship(3, 'Destroyer'));
+    this.unplacedShips.push(new Ship(3, 'Submarine'));
+    this.unplacedShips.push(new Ship(2, 'Patrol Boat'));
   }
 }
 

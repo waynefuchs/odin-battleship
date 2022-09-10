@@ -43,13 +43,13 @@ describe('AI tests', () => {
 /**
  * HUMAN TESTS
  */
-describe('AI tests', () => {
+describe('Human tests', () => {
   beforeEach(() => {
     player = new Human();
   });
   
 
-  test("AI initializes", () => {
+  test("Human initializes", () => {
     expect(player).not.toBeNull();
   })
 })

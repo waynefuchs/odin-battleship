@@ -14,6 +14,10 @@ test('Ship has a length property', () => {
   expect(ship.length).toBe(3);
 })
 
+test('Ship has a name', () => {
+  expect(typeof(ship.name)).toBe('string');
+});
+
 test('Ship can take a hit', () => {
   ship.hit(2);
   expect(ship.hits).toBe(0b100);

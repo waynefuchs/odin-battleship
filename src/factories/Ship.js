@@ -4,9 +4,11 @@ const hitAt = (position, mask) => {
 
 class Ship {
   length;
+  name;
   hits;
-  constructor(length) {
+  constructor(length, name='Unknown Vessel') {
     this.length = length;
+    this.name = name;
     this.hits = 0;
   }
 
