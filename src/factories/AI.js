@@ -1,3 +1,5 @@
+const Player = require("./Player");
+
 const names = [
   "Bjorn Toulouse",
   "Al Beback",
@@ -19,3 +21,11 @@ const names = [
   "Jay Pegg",
   "Vagry v7",
 ];
+
+class AI extends Player {
+  constructor() {
+    super(null, true);
+  }
+}
+
+module.exports = AI;
