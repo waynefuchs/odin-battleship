@@ -35,6 +35,14 @@ class AI extends Player {
   }
 
   fire() {
+    if (this.board.available.length <= 0)
+      throw new Error("There is no available ocean to attack");
+    const id = this.board.available.at(
+      getRandomInt(this.board.available.length)
+    );
+    const x = id % this.board.width;
+    const y = Math.floor(id / this.board.width);
+    return this.board.receiveAttack(x, y);
   }
 
   placeAllShips = () => {

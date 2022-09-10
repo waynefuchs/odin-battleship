@@ -4,6 +4,14 @@ const Ship = require("../Ship");
 let board;
 let ship;
 
+// helper function
+const availableForAttack = (board, x, y) =>
+  x >= 0 &&
+  x < board.width &&
+  y >= 0 &&
+  y < board.height &&
+  board.available.includes(board.width * y + x);
+
 beforeEach(() => {
   board = new GameBoard();
   ship = new Ship(3);
@@ -38,27 +46,27 @@ test("Test if ships overlap", () => {
 test("Ship can receive attack and ship can sink", () => {
   // miss
   board.place(ship, 1, 0);
-  expect(board.availableForAttack(0, 0)).toBe(true);
+  expect(availableForAttack(board, 0, 0)).toBe(true);
   expect(board.receiveAttack(0, 0)).toBe(false);
-  expect(board.availableForAttack(0, 0)).toBe(false);
-  
+  expect(availableForAttack(board, 0, 0)).toBe(false);
+
   // hit 1
   let hit = board.receiveAttack(1, 0);
   expect(hit.ship.hits).toBe(1);
-  expect(board.availableForAttack(1, 0)).toBe(false);
-  expect(board.availableForAttack(2, 0)).toBe(true);
-  
+  expect(availableForAttack(board, 1, 0)).toBe(false);
+  expect(availableForAttack(board, 2, 0)).toBe(true);
+
   // hit 2
   hit = board.receiveAttack(2, 0);
   expect(hit.ship.hits).toBe(3);
   expect(hit.ship.isSunk()).toBe(false);
-  expect(board.availableForAttack(2, 0)).toBe(false);
-  
+  expect(availableForAttack(board, 2, 0)).toBe(false);
+
   // hit 3
   hit = board.receiveAttack(3, 0);
   expect(hit.ship.hits).toBe(7);
   expect(hit.ship.isSunk()).toBe(true);
-  expect(board.availableForAttack(3, 0)).toBe(false);
+  expect(availableForAttack(board, 3, 0)).toBe(false);
 });
 
 test("Misses are tracked", () => {
@@ -67,11 +75,11 @@ test("Misses are tracked", () => {
 });
 
 test("Attacks outside bounds are not available", () => {
-  expect(board.availableForAttack(-1,0)).toBe(false);
-  expect(board.availableForAttack(0,-1)).toBe(false);
-  expect(board.availableForAttack(10,0)).toBe(false);
-  expect(board.availableForAttack(0,10)).toBe(false);
-})
+  expect(availableForAttack(board, -1, 0)).toBe(false);
+  expect(availableForAttack(board, 0, -1)).toBe(false);
+  expect(availableForAttack(board, 10, 0)).toBe(false);
+  expect(availableForAttack(board, 0, 10)).toBe(false);
+});
 
 test("Hits are tracked", () => {
   // No hits should register on a fresh board
@@ -102,7 +110,7 @@ test("Hits are tracked", () => {
   hit = board.receiveAttack(3, 0);
   expect(hit).toBe(false);
   expect(board.hits.length).toBe(3);
-})
+});
 
 test("Board correctly reports whether all ships have sunk", () => {
   // Edge case where no ships exist and can therefore not be destroyed
@@ -111,16 +119,16 @@ test("Board correctly reports whether all ships have sunk", () => {
   // Add a single ship
   board.place(ship, 0, 0);
   expect(board.haveAllShipsBeenDestroyed()).toBe(false);
-  
+
   // Destroy most of it
   board.receiveAttack(0, 0);
   board.receiveAttack(1, 0);
   expect(board.haveAllShipsBeenDestroyed()).toBe(false);
-  
+
   // Finish it off
   board.receiveAttack(2, 0);
   expect(board.haveAllShipsBeenDestroyed()).toBe(true);
-  
+
   // Add a second ship, not all ships are destroyed now
   ship = new Ship(5);
   board.place(ship, 5, 9);

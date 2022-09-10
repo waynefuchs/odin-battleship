@@ -40,6 +40,17 @@ describe('AI tests', () => {
     expect(ai).not.toBeNull();
     expect(ai.board.ships.length).toBe(5);
   })
+
+  test("AI can fire a shot", () => {
+    expect(ai.board.available.length).toBe(100);
+    let result = ai.fire(); // will be true or false, and random :|
+    expect(ai.board.available.length).toBe(99);
+    for(let i=98; i >= 0; i -= 1) {
+      let result = ai.fire();
+      expect(ai.board.available.length).toBe(i);
+    }
+    // expect(() => ai.fire()).toThrow(Error);
+  })
 })
 
 
