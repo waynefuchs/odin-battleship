@@ -66,6 +66,13 @@ test("Misses are tracked", () => {
   expect(() => board.receiveAttack(5, 5)).toThrow(Error);
 });
 
+test("Attacks outside bounds are not available", () => {
+  expect(board.availableForAttack(-1,0)).toBe(false);
+  expect(board.availableForAttack(0,-1)).toBe(false);
+  expect(board.availableForAttack(10,0)).toBe(false);
+  expect(board.availableForAttack(0,10)).toBe(false);
+})
+
 test("Hits are tracked", () => {
   // No hits should register on a fresh board
   expect(board.hits.length).toBe(0);
