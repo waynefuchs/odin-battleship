@@ -1,5 +1,6 @@
 const Player = require("./Player");
 const Ship = require("./Ship");
+const {getRandomInt, getRandomBool} = require("./Random");
 
 const names = [
   "Bjorn Toulouse",
@@ -35,13 +36,8 @@ class AI extends Player {
   }
 
   fire() {
-    if (this.board.available.length <= 0)
-      throw new Error("There is no available ocean to attack");
-    const id = this.board.available.at(
-      getRandomInt(this.board.available.length)
-    );
-    const x = id % this.board.width;
-    const y = Math.floor(id / this.board.width);
+    console.log("==============From Fire")
+    const [x, y] = this.board.getRandomAvailable();
     return this.board.receiveAttack(x, y);
   }
 
@@ -55,7 +51,8 @@ class AI extends Player {
   placeShip(ship) {
     let isPlaced = false;
     while (ship && !isPlaced) {
-      const vertical = getRandomBool();
+      // const vertical = getRandomBool();
+      const vertical = true;
       const x = getRandomInt(this.board.width - (vertical ? 0 : ship.length));
       const y = getRandomInt(this.board.height - (vertical ? ship.length : 0));
       try {
@@ -65,8 +62,5 @@ class AI extends Player {
     }
   }
 }
-
-const getRandomInt = (max) => Math.floor(Math.random() * max);
-const getRandomBool = () => Math.floor(Math.random() * 2) === 0;
 
 module.exports = AI;

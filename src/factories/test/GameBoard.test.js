@@ -4,14 +4,6 @@ const Ship = require("../Ship");
 let board;
 let ship;
 
-// helper function
-const availableForAttack = (board, x, y) =>
-  x >= 0 &&
-  x < board.width &&
-  y >= 0 &&
-  y < board.height &&
-  board.available.includes(board.width * y + x);
-
 beforeEach(() => {
   board = new GameBoard();
   ship = new Ship(3);
@@ -46,27 +38,27 @@ test("Test if ships overlap", () => {
 test("Ship can receive attack and ship can sink", () => {
   // miss
   board.place(ship, 1, 0);
-  expect(availableForAttack(board, 0, 0)).toBe(true);
+  expect(board.isHit(0, 0)).toBe(false);
   expect(board.receiveAttack(0, 0)).toBe(false);
-  expect(availableForAttack(board, 0, 0)).toBe(false);
+  expect(board.isHit(0, 0)).toBe(false);
 
   // hit 1
   let hit = board.receiveAttack(1, 0);
   expect(hit.ship.hits).toBe(1);
-  expect(availableForAttack(board, 1, 0)).toBe(false);
-  expect(availableForAttack(board, 2, 0)).toBe(true);
+  expect(board.isHit(1, 0)).toBe(false);
+  expect(board.isHit(2, 0)).toBe(true);
 
   // hit 2
   hit = board.receiveAttack(2, 0);
   expect(hit.ship.hits).toBe(3);
   expect(hit.ship.isSunk()).toBe(false);
-  expect(availableForAttack(board, 2, 0)).toBe(false);
+  expect(board.isHit(2, 0)).toBe(false);
 
   // hit 3
   hit = board.receiveAttack(3, 0);
   expect(hit.ship.hits).toBe(7);
   expect(hit.ship.isSunk()).toBe(true);
-  expect(availableForAttack(board, 3, 0)).toBe(false);
+  expect(board.isHit(3, 0)).toBe(false);
 });
 
 test("Misses are tracked", () => {
@@ -75,10 +67,10 @@ test("Misses are tracked", () => {
 });
 
 test("Attacks outside bounds are not available", () => {
-  expect(availableForAttack(board, -1, 0)).toBe(false);
-  expect(availableForAttack(board, 0, -1)).toBe(false);
-  expect(availableForAttack(board, 10, 0)).toBe(false);
-  expect(availableForAttack(board, 0, 10)).toBe(false);
+  expect(board.isHit(-1, 0)).toBe(false);
+  expect(board.isHit(0, -1)).toBe(false);
+  expect(board.isHit(10, 0)).toBe(false);
+  expect(board.isHit(0, 10)).toBe(false);
 });
 
 test("Hits are tracked", () => {
@@ -140,4 +132,32 @@ test("Board correctly reports whether all ships have sunk", () => {
   expect(board.haveAllShipsBeenDestroyed()).toBe(false);
   board.receiveAttack(9, 9);
   expect(board.haveAllShipsBeenDestroyed()).toBe(true);
+});
+
+test("Vertical ships also work", () => {
+  // miss
+  const vertical = true;
+  board.place(ship, 0, 1, vertical);
+  expect(board.receiveAttack(0, 0)).toBe(false);
+  expect(board.isHit(0, 0)).toBe(false);
+
+  // hit 1
+  expect(board.isHit(0, 1)).toBe(true);
+  let hit = board.receiveAttack(0, 1);
+  expect(hit.ship.hits).toBe(0b001);
+  expect(board.isHit(0, 1)).toBe(false);
+
+  // hit 2
+  expect(board.isHit(0, 2)).toBe(true);
+  hit = board.receiveAttack(0, 2);
+  expect(hit).not.toBe(false);
+  expect(hit.ship.hits).toBe(0b011);
+  expect(hit.ship.isSunk()).toBe(false);
+  expect(board.isHit(2, 0)).toBe(false);
+
+  // hit 3
+  hit = board.receiveAttack(0, 3);
+  expect(hit.ship.hits).toBe(0b111);
+  expect(hit.ship.isSunk()).toBe(true);
+  expect(board.isHit(3, 0)).toBe(false);
 });

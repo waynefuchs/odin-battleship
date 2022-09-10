@@ -1,3 +1,5 @@
+const { getRandomInt } = require("./Random");
+
 const GAME_BOARD_WIDTH = 10;
 const GAME_BOARD_HEIGHT = 10;
 
@@ -18,7 +20,7 @@ class GameBoard {
   }
 
   place = (ship, x, y, vertical = false) => {
-    const newShipObj = getShipObject(ship, x, y, this.width);
+    const newShipObj = getShipObject(ship, x, y, vertical, this.width);
     checkForOutOfBoundsPlacement(this, vertical, ship, y, x);
     checkShipsForOverlap(this, newShipObj);
     addShipToBoard(this, newShipObj);
@@ -34,8 +36,18 @@ class GameBoard {
     this.ships.every((shipObj) => shipObj.ship.isSunk()) &&
     this.ships.length > 0;
 
-}
+  getRandomAvailable() {
+    if (this.available.length <= 0)
+      throw new Error(
+        "There are no available spots in the ocean left to attack"
+      );
+    const randomIndex = getRandomInt(this.available.length);
+    const id = this.available.at(randomIndex);
+    return idToXY(id, this.width);
+  }
 
+  isHit = (x, y) => doesAttackHit(this, x, y);
+}
 
 // Private Functions
 const removeFromAvailable = (board, x, y) => {
@@ -48,20 +60,39 @@ const removeFromAvailable = (board, x, y) => {
 
 const cellId = (x, y, boardWidth) => boardWidth * y + x;
 
-const shipCellIds = (boardWidth, ship) => {
-  const range = [...Array(ship.length).keys()];
-  return range.map((n) => n + cellId(ship.x, ship.y, boardWidth));
+const idToXY = (id, boardWidth) => [
+  id % boardWidth,
+  Math.floor(id / boardWidth),
+];
+
+const shipCellIds = (boardWidth, shipObj) => {
+  if (shipObj.vertical === undefined)
+    throw new Error("Ship vertical specification must be defined");
+  const startId = cellId(shipObj.x, shipObj.y, boardWidth);
+  return shipObj.vertical
+    ? [...Array(shipObj.length)].fill(startId).map((n, i) => n + i * 10)
+    : [...Array(shipObj.length).keys()].map((n) => n + startId);
 };
 
-const isHit = (board, ship, x, y) =>
-  ship.positions.includes(cellId(x, y, board.width));
+const isHit = (board, shipObj, x, y) =>
+  shipObj.positions.includes(cellId(x, y, board.width));
 
-const doesAttackHit = (board, x, y) =>
-  board.ships.some((ship) => isHit(board, ship, x, y));
+const doesAttackHit = (board, x, y) => {
+  const isAvailable = board.available.includes(cellId(x, y, board.width));
+  const isShipThere = board.ships.some((shipObj) =>
+    isHit(board, shipObj, x, y)
+  );
+  return isAvailable && isShipThere;
+};
 
-const getShipObject = (ship, x, y, boardWidth) => {
-  const positions = shipCellIds(boardWidth, { length: ship.length, x, y });
-  const shipObj = { ship, x, y, positions };
+const getShipObject = (ship, x, y, vertical, boardWidth) => {
+  const positions = shipCellIds(boardWidth, {
+    length: ship.length,
+    x,
+    y,
+    vertical,
+  });
+  const shipObj = { ship, x, y, positions, vertical };
   return shipObj;
 };
 
