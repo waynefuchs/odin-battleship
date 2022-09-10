@@ -1,8 +1,22 @@
 {
+  "name": "Battleship",
+  "author": "Wayne Fuchs",
+  "private": true,
+  "license": "ISC",
+  "version": "1.0.0",
+  "description": "Implement the game of Battleship",
+  "main": "index.js",
   "devDependencies": {
-    "jest": "^29.0.2"
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "jest": "^29.0.2",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "watch": "webpack --watch",
+    "build": "webpack"
   }
 }
