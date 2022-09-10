@@ -16,6 +16,7 @@ test('Ship has a length property', () => {
 
 test('Ship has a name', () => {
   expect(typeof(ship.name)).toBe('string');
+  expect(ship.name.length).toBeGreaterThan(0);
 });
 
 test('Ship can take a hit', () => {
