@@ -60,6 +60,21 @@ test("Misses are tracked", () => {
   expect(() => board.receiveAttack(5, 5)).toThrow(Error);
 });
 
+test("Hits are tracked", () => {
+  expect(board.hits.length).toBe(0);
+  board.place(ship, 0, 0);
+  let hit = board.receiveAttack(1, 0);
+  expect(hit.ship.hits).toBe(1);
+  expect(board.hits.at(0)).toBe(1);
+  hit = board.receiveAttack(0, 0);
+  expect(hit.ship.hits).toBe(2);
+  expect(board.hits.at(1)).toBe(0);
+  board.place(ship, 0, 1);
+  hit = board.receiveAttack(0, 1);
+  expect(hit.ship.hits).toBe(1);
+  expect(board.hits.at(2)).toBe(10);
+})
+
 test("Board correctly reports whether all ships have sunk", () => {
   expect(false).toBe(false);
 });
