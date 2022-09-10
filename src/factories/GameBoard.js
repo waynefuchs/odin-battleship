@@ -27,6 +27,10 @@ class GameBoard {
     addMissToBoard(this, x, y);
     return false;
   }
+
+  haveAllShipsBeenDestroyed = () =>
+    this.ships.every((shipObj) => shipObj.ship.isSunk()) &&
+    this.ships.length > 0;
 }
 
 const cellId = (x, y, boardWidth) => boardWidth * y + x;
@@ -66,9 +70,10 @@ const doShipsOverlap = (shipA, shipB) => {
 
 const addMissToBoard = (board, x, y) => {
   const missId = cellId(x, y, board.width);
-  if(board.misses.includes(missId)) throw new Error("Miss already registered at this location");
+  if (board.misses.includes(missId))
+    throw new Error("Miss already registered at this location");
   board.misses.push(missId);
-}
+};
 
 const addShipToBoard = (board, newShipObj) => {
   board.ships.push(newShipObj);
