@@ -19,6 +19,11 @@ test('Ship can take a hit', () => {
   expect(ship.hits).toBe(0b100);
 })
 
+test('Ship getting hit in the same place more than once throws an error', () => {
+  expect(() => ship.hit(0)).not.toThrow(Error);
+  expect(() => ship.hit(0)).toThrow(Error);
+})
+
 test('Ship hits out of bounds throw an error', () => {
   expect(() => ship.hit(-1)).toThrow(Error);
   expect(() => ship.hit(0)).not.toThrow(Error);
