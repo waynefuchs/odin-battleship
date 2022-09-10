@@ -36,7 +36,6 @@ class AI extends Player {
   }
 
   fire() {
-    console.log("==============From Fire")
     const [x, y] = this.board.getRandomAvailable();
     return this.board.receiveAttack(x, y);
   }
