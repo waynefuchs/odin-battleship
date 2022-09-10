@@ -54,3 +54,8 @@ test('Ship can receive attack and ship can sink', () => {
   expect(hit.ship.hits).toBe(7);
   expect(hit.ship.isSunk()).toBe(true);
 })
+
+test('Misses are tracked', () => {
+  expect(board.receiveAttack(5, 5)).toBe(false);
+  expect(() => board.receiveAttack(5, 5)).toThrow(Error);
+})
