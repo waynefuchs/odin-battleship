@@ -4,14 +4,15 @@ const GAME_BOARD_HEIGHT = 10;
 class GameBoard {
   width;
   height;
+  misses;
   ships;
-  shipCount;
 
   constructor() {
     this.width = GAME_BOARD_WIDTH;
     this.height = GAME_BOARD_HEIGHT;
+    this.misses = [];
+    this.hits = [];
     this.ships = [];
-    this.shipCount = 0;
   }
 
   place = (ship, x, y, vertical = false) => {
@@ -23,7 +24,7 @@ class GameBoard {
 
   receiveAttack(x, y) {
     if (doesAttackHit(this, x, y)) return attackShip(this, x, y);
-    // register a miss
+    addMissToBoard(this, x, y);
     return false;
   }
 }
@@ -63,9 +64,14 @@ const doShipsOverlap = (shipA, shipB) => {
   return shipA.positions.some((position) => shipB.positions.includes(position));
 };
 
+const addMissToBoard = (board, x, y) => {
+  const missId = cellId(x, y, board.width);
+  if(board.misses.includes(missId)) throw new Error("Miss already registered at this location");
+  board.misses.push(missId);
+}
+
 const addShipToBoard = (board, newShipObj) => {
   board.ships.push(newShipObj);
-  board.shipCount = board.ships.length;
 };
 
 const attackShip = (board, x, y) => {

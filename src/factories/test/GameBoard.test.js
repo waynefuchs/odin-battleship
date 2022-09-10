@@ -14,20 +14,20 @@ test('Board class exists', () => {
 })
 
 test('Can place ship on board', () => {
-  expect(board.shipCount).toBe(0);
+  expect(board.ships.length).toBe(0);
   board.place(ship, 0, 0);
-  expect(board.shipCount).toBe(1);
+  expect(board.ships.length).toBe(1);
 })
 
 test('Placing ship out of bounds throws error', () => {
   expect(() => board.place(ship, 8, 0)).toThrow(Error);
-  expect(board.shipCount).toBe(0);
+  expect(board.ships.length).toBe(0);
   expect(() => board.place(ship, 7, 0)).not.toThrow(Error);
-  expect(board.shipCount).toBe(1);
+  expect(board.ships.length).toBe(1);
   expect(() => board.place(ship, 0, 8, true)).toThrow(Error);
-  expect(board.shipCount).toBe(1);
+  expect(board.ships.length).toBe(1);
   expect(() => board.place(ship, 0, 7, true)).not.toThrow(Error);
-  expect(board.shipCount).toBe(2);
+  expect(board.ships.length).toBe(2);
 });
 
 test('Test if ships overlap', () => {
