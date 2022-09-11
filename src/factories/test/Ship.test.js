@@ -3,7 +3,7 @@ const Ship = require('../Ship');
 let ship;
 
 beforeEach(() => {
-  ship = new Ship(3);
+  ship = new Ship(3, 'default');
 })
 
 test('Ship class exists', () => {
@@ -45,4 +45,8 @@ test('Ship can be sunk', () => {
   expect(ship.isSunk()).toBe(false);
   ship.hit(2);
   expect(ship.isSunk()).toBe(true);
+})
+
+test('Ship remembers its name', () => {
+  expect(ship.name).toBe('default');
 })
