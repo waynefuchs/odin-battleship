@@ -89,17 +89,30 @@ describe("Human tests", () => {
     // Vertical off bottom fails
     expect(player.placeNextUnplacedShip(0, 9, true)).toBe(false);
     expect(player.isReady).toBe(false);
-    
+
     // 5. Vertical
     expect(player.placeNextUnplacedShip(0, 8, true)).toBe(true);
     expect(player.isReady).toBe(true);
 
     // throw..
     expect(() => player.placeNextUnplacedShip(5, 5, false)).toThrow(Error);
-  })
+  });
 
   test("Test that unplaced ship IDs are correct", () => {
-    
+    expect(player.getNextShipIds(0, 0, false)).toContain(0);
+    expect(player.getNextShipIds(0, 0, false)).toContain(1);
+    expect(player.getNextShipIds(0, 0, false)).toContain(2);
+    expect(player.getNextShipIds(0, 0, false)).toContain(3);
+    expect(player.getNextShipIds(0, 0, false)).toContain(4);
+    expect(player.getNextShipIds(0, 0, false)).toStrictEqual([0, 1, 2, 3, 4]);
+
+    expect(player.getNextShipIds(0, 5, true)).toContain(50);
+    expect(player.getNextShipIds(0, 5, true)).toContain(60);
+    expect(player.getNextShipIds(0, 5, true)).toContain(70);
+    expect(player.getNextShipIds(0, 5, true)).toContain(80);
+    expect(player.getNextShipIds(0, 5, true)).toContain(90);
+    expect(player.getNextShipIds(0, 5, true)).toStrictEqual([
+      50, 60, 70, 80, 90,
+    ]);
   });
-  
 });

@@ -15,6 +15,7 @@ class Human extends Player {
 
   getNextShipIds(x, y, vertical) {
     const ship = this.unplacedShips.at(0);
+    return this.board.shipCellIds({ship, length: ship.length, x, y, vertical})
   }
 
   placeNextUnplacedShip(x, y, vertical) {
