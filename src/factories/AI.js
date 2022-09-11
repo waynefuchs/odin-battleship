@@ -33,6 +33,7 @@ class AI extends Player {
     this.unplacedShips.push(new Ship(3, "Submarine"));
     this.unplacedShips.push(new Ship(2, "Patrol Boat"));
     this.placeAllShips();
+    this.name = names.at(getRandomInt(names.length));
     this.isReady = true;
   }
 

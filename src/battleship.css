@@ -6,7 +6,8 @@
   --c-hover: rgb(172, 129, 50);
   --c-hit: rgb(117, 48, 48);
   --c-miss: #302626;
-  --c-bg: #333333;
+  --c-bg: #2e2a2ad0;
+  --c-border: #111111;
   --c-text: #cccccc;
   --gap: 2vw;
 }
@@ -31,11 +32,17 @@ h1{
   padding: var(--gap);
 }
 
+.playername {
+  text-align: center;
+}
+
+.side-by-side-height {
+  height: calc((100vw - (var(--gap) * 3)) / 2);
+}
 .side-by-side {
   display: grid;
   grid-template-columns: auto auto;
   width: 100vw;
-  height: calc((100vw - (var(--gap) * 3)) / 2);
   gap: var(--gap);
   padding: var(--gap);
 }
@@ -62,7 +69,7 @@ h1{
 .cell {
   padding: 0;
   background-color: grey;
-  border: 1px solid var(--c-bg);
+  border: 1px solid var(--c-border);
   text-align: center;
 }
 
@@ -72,7 +79,7 @@ h1{
 
 .cell.ship {
   background-color: var(--c-ship);
-  border: 1px solid var(--c-bg);
+  border: 1px solid var(--c-border);
 }
 
 .cell.miss {
@@ -81,4 +88,24 @@ h1{
 
 .cell.hit {
   background-color: var(--c-hit);
+}
+
+.hide {
+  display: none;
+}
+
+#winstatus {
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  text-align: center;
+  background-color: var(--c-bg);
+  border: 2px solid var(--c-border);
+  padding: var(--gap);
+  border-radius: var(--gap);
+}
+
+.nospace {
+  padding: 0;
+  margin: 0;
 }

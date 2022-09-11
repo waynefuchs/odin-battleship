@@ -12,7 +12,9 @@ class GameLoop {
     this.humanPlayer = new Human();
     this.aiPlayer = new AI();
 
+    this.ui.setPlayerName(this.humanPlayer.name, 'friend');
     this.ui.initializeBoard(this.humanPlayer.board, "friend");
+    this.ui.setPlayerName(this.aiPlayer.name, 'foe');
     this.ui.initializeBoard(this.aiPlayer.board, "foe", this.playerFinishedTurn);
     
     this.updateUI();
@@ -23,8 +25,12 @@ class GameLoop {
   playerFinishedTurn = () => {
     // TODO Process enemy turn...
     this.aiPlayer.fire(this.humanPlayer.board);
+    if(this.humanPlayer.board.haveAllShipsBeenDestroyed())
+      this.ui.showGameOver(this.aiPlayer.name);
 
     this.updateUI();
+    if(this.aiPlayer.board.haveAllShipsBeenDestroyed())
+      this.ui.showGameOver(this.humanPlayer.name);
   }
 
   updateUI() {

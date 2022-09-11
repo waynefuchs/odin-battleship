@@ -11,6 +11,11 @@ class UI {
     }
   }
 
+  setPlayerName(name, selector) {
+    const h1 = document.querySelector(`#name-${selector}`);
+    h1.textContent = name;
+  }
+
   updateBoard(board, selector, showShips = false) {
     if (showShips) this.showShips(board, selector);
     this.showHits(board, selector);
@@ -31,14 +36,15 @@ class UI {
       const parentDiv = this.getGameboardElement(selector);
       if (!parentDiv.classList.contains("enabled")) return;
       if (!cell.classList.contains("target")) return;
+      if (board.haveAllShipsBeenDestroyed()) {
+        parentDiv.classList.remove('enabled');
+        return;
+      }
 
       cell.classList.remove("target");
       board.receiveAttack(x, y);
 
-      console.log("clicked?");
       callback();
-      // this.showHits(board, selector);
-      // this.showMisses(board, selector);
     });
     return cell;
   }
@@ -100,6 +106,13 @@ class UI {
       const li = this.makeShipListLi(ship.ship.name, ship.ship.isSunk());
       shiplist.append(li);
     });
+  }
+
+  showGameOver(name) {
+    const winstatus = document.querySelector('#winstatus');
+    const winner = winstatus.querySelector('#winner');
+    winner.textContent = `${name} wins!`;
+    winstatus.classList.remove('hide');
   }
 
   getGameboardElement = (selector) =>

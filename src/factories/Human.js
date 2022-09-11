@@ -12,6 +12,7 @@ class Human extends Player {
 
     const ship = new Ship(10, 'Megaship');
     this.board.place(ship, 0, 0);
+    this.name = 'Human Player';
     this.isReady = true;
   }
 }

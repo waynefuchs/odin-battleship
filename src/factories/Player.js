@@ -4,6 +4,7 @@ const Ship = require("./Ship");
 class Player {
   board;
   unplacedShips;
+  name;
   isAi;
   isReady;
 
