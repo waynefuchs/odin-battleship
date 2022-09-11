@@ -63,4 +63,37 @@ describe("Human tests", () => {
   test("Human initializes", () => {
     expect(player).not.toBeNull();
   });
+
+  test("Unplaced ships can be placed", () => {
+    // Placement off the edge fails
+    expect(player.placeNextUnplacedShip(6, 0, false)).toBe(false);
+
+    // It fails again (because the ship wasn't removed from the queue)
+    expect(player.placeNextUnplacedShip(6, 0, false)).toBe(false);
+
+    // 1. OOOOOSSSSS
+    expect(player.placeNextUnplacedShip(5, 0, false)).toBe(true);
+
+    // 2. OSSSSPPPPP
+    expect(player.placeNextUnplacedShip(1, 0, false)).toBe(true);
+
+    // 3. Vertical over top another ship fails
+    expect(player.placeNextUnplacedShip(1, 0, true)).toBe(false);
+
+    // 3. Vertical placement
+    expect(player.placeNextUnplacedShip(0, 0, true)).toBe(true);
+
+    // 4. Vertical placement
+    expect(player.placeNextUnplacedShip(1, 1, true)).toBe(true);
+
+    // Vertical off bottom fails
+    expect(player.placeNextUnplacedShip(0, 9, true)).toBe(false);
+
+    // 5. Vertical
+    expect(player.placeNextUnplacedShip(0, 8, true)).toBe(true);
+
+    // throw..
+    expect(() => player.placeNextUnplacedShip(5, 5, false)).toThrow(Error);
+  })
+
 });
