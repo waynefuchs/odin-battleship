@@ -33,11 +33,12 @@ class AI extends Player {
     this.unplacedShips.push(new Ship(3, "Submarine"));
     this.unplacedShips.push(new Ship(2, "Patrol Boat"));
     this.placeAllShips();
+    this.isReady = true;
   }
 
-  fire() {
-    const [x, y] = this.board.getRandomAvailable();
-    return this.board.receiveAttack(x, y);
+  fire(enemyBoard) {
+    const [x, y] = enemyBoard.getRandomAvailable();
+    return enemyBoard.receiveAttack(x, y);
   }
 
   placeAllShips = () => {
@@ -50,8 +51,7 @@ class AI extends Player {
   placeShip(ship) {
     let isPlaced = false;
     while (ship && !isPlaced) {
-      // const vertical = getRandomBool();
-      const vertical = true;
+      const vertical = getRandomBool();
       const x = getRandomInt(this.board.width - (vertical ? 0 : ship.length));
       const y = getRandomInt(this.board.height - (vertical ? ship.length : 0));
       try {

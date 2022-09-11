@@ -9,6 +9,10 @@ class Human extends Player {
     this.unplacedShips.push(new Ship(3, 'Cruiser'));
     this.unplacedShips.push(new Ship(3, 'Submarine'));
     this.unplacedShips.push(new Ship(2, 'Destroyer'));
+
+    const ship = new Ship(10, 'Megaship');
+    this.board.place(ship, 0, 0);
+    this.isReady = true;
   }
 }
 

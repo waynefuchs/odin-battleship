@@ -6,6 +6,7 @@ const GAME_BOARD_HEIGHT = 10;
 class GameBoard {
   width;
   height;
+  hits;
   misses;
   ships;
   available;

@@ -12,8 +12,24 @@ class GameLoop {
     this.humanPlayer = new Human();
     this.aiPlayer = new AI();
 
-    this.ui.drawBoard(this.humanPlayer.board, "#gameboard-friend");
-    this.ui.drawBoard(this.aiPlayer.board, "#gameboard-foe");
+    this.ui.initializeBoard(this.humanPlayer.board, "friend");
+    this.ui.initializeBoard(this.aiPlayer.board, "foe", this.playerFinishedTurn);
+    
+    this.updateUI();
+    // debug
+    // this.ui.showShips(this.aiPlayer.board, 'foe');
+  }
+
+  playerFinishedTurn = () => {
+    // TODO Process enemy turn...
+    this.aiPlayer.fire(this.humanPlayer.board);
+
+    this.updateUI();
+  }
+
+  updateUI() {
+    this.ui.updateBoard(this.humanPlayer.board, 'friend', true);
+    this.ui.updateBoard(this.aiPlayer.board, 'foe', false);
   }
 }
 
