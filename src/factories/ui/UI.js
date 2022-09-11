@@ -29,6 +29,8 @@ class UI {
     const htmlId = `${selector}${id}`;
     CELL_CLASSES.forEach((c) => cell.classList.add(c));
     cell.id = htmlId;
+    // TODO: REMOVE
+    cell.textContent = id;
 
     if (callback === null) return cell;
 

@@ -14,7 +14,6 @@ class GameLoop {
     UI.showShipNames(this.humanPlayer.unplacedShips, "placeboats");
 
 
-    return;
     UI.setPlayerName(this.humanPlayer.name, "friend");
     UI.initializeBoard(this.humanPlayer.board, "friend");
     UI.setPlayerName(this.aiPlayer.name, "foe");

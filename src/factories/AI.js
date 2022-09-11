@@ -8,7 +8,6 @@ const names = [
   "Yuri Diculous",
   "Perry Noid",
   "Stu Pitt",
-  "Otto Mobile",
   "Mick Stup",
   "Luke Warm",
   "Tai Mi Shu",
@@ -16,12 +15,12 @@ const names = [
   "Hugh Mungus",
   "Sam Urai",
   "Lee Mealone",
-  "Victor E. Lane",
   "Doug Graves",
   "Van Quish",
   "Ken Yoo Seami",
   "Jay Pegg",
   "Vagry v7",
+  "Rand Omize",
 ];
 
 class AI extends Player {
@@ -50,25 +49,36 @@ class AI extends Player {
   };
 
   placeShip(ship) {
+    const cellCount = this.board.width * this.board.height;
+    const allBoardIds = [...Array(cellCount).keys()];
+    const possibleHorizontalIds = allBoardIds
+      .filter((id) => id % this.board.width <= this.board.width - ship.length)
+      .map((id) => [id, false]);
+    const possibleVerticalIds = allBoardIds
+      .filter((id) => id <= cellCount - ship.length * this.board.width)
+      .map((id) => [id, true]);
+    let possibleIds = possibleHorizontalIds.concat(possibleVerticalIds);
+
     let isPlaced = false;
-    const failCount = 1000;
-    let i;
-    for (i = 0; i < failCount && ship && !isPlaced; i++) {
-      const vertical = getRandomBool();
-      const x = getRandomInt(this.board.width - (vertical ? 0 : ship.length));
-      const y = getRandomInt(this.board.height - (vertical ? ship.length : 0));
+    while (!isPlaced && possibleIds.length > 0) {
+      const randomIndex = getRandomInt(possibleIds.length);
+      const [id, vertical] = possibleIds.at(randomIndex);
+      possibleIds = possibleIds.filter((i) => i[0] !== id || i[1] !== vertical);
+
+      const [x, y] = this.board.cellXY(id);
+      const shipObj = { ship, x, y, vertical, length: ship.length };
+      this.board.shipCellIds(shipObj);
       try {
         this.board.place(ship, x, y, vertical);
         isPlaced = true;
       } catch (error) {}
     }
 
-    // Should never get here.. unless you do..
-    // RNG could pick the same square `failCount` times in a row..
-    // I could come up with another way to handle this if it becomes an issue
-    if (i === failCount)
-      throw new Error("Reached failCount, operation likely failed");
+    if (possibleIds.length <= 0)
+      throw new Error("AI failed to randomly place a piece");
   }
 }
 
 module.exports = AI;
+
+// Rand Omize

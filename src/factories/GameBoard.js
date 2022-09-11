@@ -51,11 +51,8 @@ class GameBoard {
 
   cellId = (x, y) => this.width * y + x;
 
-  cellXY = (id) => [
-    id % this.width,
-    Math.floor(id / this.width),
-  ];
-  
+  cellXY = (id) => [id % this.width, Math.floor(id / this.width)];
+
   shipCellIds = (shipObj) => {
     if (shipObj.vertical === undefined)
       throw new Error("Ship vertical specification must be defined");
