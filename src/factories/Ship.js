@@ -21,6 +21,10 @@ class Ship {
   };
 
   isSunk = () => 2 ** this.length - 1 === this.hits;
+
+  getPositions = (boardWidth, x, y, vertical) => {
+    
+  }
 }
 
 module.exports = Ship;

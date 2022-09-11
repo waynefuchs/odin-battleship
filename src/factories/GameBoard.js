@@ -44,11 +44,26 @@ class GameBoard {
       );
     const randomIndex = getRandomInt(this.available.length);
     const id = this.available.at(randomIndex);
-    return idToXY(id, this.width);
+    return this.cellXY(id);
   }
 
   isHit = (x, y) => doesAttackHit(this, x, y);
+
   cellId = (x, y) => this.width * y + x;
+
+  cellXY = (id) => [
+    id % this.width,
+    Math.floor(id / this.width),
+  ];
+  
+  shipCellIds = (shipObj) => {
+    if (shipObj.vertical === undefined)
+      throw new Error("Ship vertical specification must be defined");
+    const startId = this.cellId(shipObj.x, shipObj.y);
+    return shipObj.vertical
+      ? [...Array(shipObj.length)].fill(startId).map((n, i) => n + i * 10)
+      : [...Array(shipObj.length).keys()].map((n) => n + startId);
+  };
 }
 
 // Private Functions
@@ -58,20 +73,6 @@ const removeFromAvailable = (board, x, y) => {
   if (newArray.length === board.available.length)
     throw new Error("Failed to remove from available list of ids");
   board.available = newArray;
-};
-
-const idToXY = (id, boardWidth) => [
-  id % boardWidth,
-  Math.floor(id / boardWidth),
-];
-
-const shipCellIds = (board, shipObj) => {
-  if (shipObj.vertical === undefined)
-    throw new Error("Ship vertical specification must be defined");
-  const startId = board.cellId(shipObj.x, shipObj.y);
-  return shipObj.vertical
-    ? [...Array(shipObj.length)].fill(startId).map((n, i) => n + i * 10)
-    : [...Array(shipObj.length).keys()].map((n) => n + startId);
 };
 
 const isHit = (board, shipObj, x, y) =>
@@ -86,12 +87,7 @@ const doesAttackHit = (board, x, y) => {
 };
 
 const getShipObject = (ship, x, y, vertical, board) => {
-  const positions = shipCellIds(board, {
-    length: ship.length,
-    x,
-    y,
-    vertical,
-  });
+  const positions = board.shipCellIds({ length: ship.length, x, y, vertical });
   const shipObj = { ship, x, y, positions, vertical };
   return shipObj;
 };

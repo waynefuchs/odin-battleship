@@ -13,6 +13,10 @@ class Human extends Player {
     this.name = "Human Player";
   }
 
+  getNextShipIds(x, y, vertical) {
+    const ship = this.unplacedShips.at(0);
+  }
+
   placeNextUnplacedShip(x, y, vertical) {
     if (this.unplacedShips.length <= 0)
       throw new Error("There are no unplaced ships to place");

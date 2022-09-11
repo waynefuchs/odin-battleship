@@ -1,6 +1,6 @@
 const Player = require("./Player");
 const Ship = require("./Ship");
-const {getRandomInt, getRandomBool} = require("./Random");
+const { getRandomInt, getRandomBool } = require("./Random");
 
 const names = [
   "Bjorn Toulouse",
@@ -51,7 +51,9 @@ class AI extends Player {
 
   placeShip(ship) {
     let isPlaced = false;
-    while (ship && !isPlaced) {
+    const failCount = 1000;
+    let i;
+    for (i = 0; i < failCount && ship && !isPlaced; i++) {
       const vertical = getRandomBool();
       const x = getRandomInt(this.board.width - (vertical ? 0 : ship.length));
       const y = getRandomInt(this.board.height - (vertical ? ship.length : 0));
@@ -60,6 +62,12 @@ class AI extends Player {
         isPlaced = true;
       } catch (error) {}
     }
+
+    // Should never get here.. unless you do..
+    // RNG could pick the same square `failCount` times in a row..
+    // I could come up with another way to handle this if it becomes an issue
+    if (i === failCount)
+      throw new Error("Reached failCount, operation likely failed");
   }
 }
 

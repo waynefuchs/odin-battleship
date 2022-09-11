@@ -1,29 +1,29 @@
 const CELL_CLASSES = ["cell", "target"];
 
 class UI {
-  initializeBoard(board, selector, callback = null) {
-    const boardDiv = this.getGameboardElement(selector);
+  static initializeBoard(board, selector, callback = null) {
+    const boardDiv = UI.getGameboardElement(selector);
     for (let y = 0; y < board.width; y++) {
       for (let x = 0; x < board.height; x++) {
-        const cell = this.makeBoardCell(board, selector, x, y, callback);
+        const cell = UI.makeBoardCell(board, selector, x, y, callback);
         boardDiv.append(cell);
       }
     }
   }
 
-  setPlayerName(name, selector) {
+  static setPlayerName(name, selector) {
     const h1 = document.querySelector(`#name-${selector}`);
     h1.textContent = name;
   }
 
-  updateBoard(board, selector, showShips = false) {
-    if (showShips) this.showShips(board, selector);
-    this.showHits(board, selector);
-    this.showMisses(board, selector);
-    this.showShipNames(board.ships, selector);
+  static updateBoard(board, selector, showShips = false) {
+    if (showShips) UI.showShips(board, selector);
+    UI.showHits(board, selector);
+    UI.showMisses(board, selector);
+    UI.showShipNames(board.ships, selector);
   }
 
-  makeBoardCell(board, selector, x, y, callback) {
+  static makeBoardCell(board, selector, x, y, callback) {
     const cell = document.createElement("div");
     const id = board.cellId(x, y);
     const htmlId = `${selector}${id}`;
@@ -33,7 +33,7 @@ class UI {
     if (callback === null) return cell;
 
     cell.addEventListener("click", () => {
-      const parentDiv = this.getGameboardElement(selector);
+      const parentDiv = UI.getGameboardElement(selector);
       if (!parentDiv.classList.contains("enabled")) return;
       if (!cell.classList.contains("target")) return;
       if (board.haveAllShipsBeenDestroyed()) {
@@ -49,79 +49,88 @@ class UI {
     return cell;
   }
 
-  makeShipListLi(name, destroyed = false) {
+  static makeShipNameLi(name, destroyed = false) {
     const li = document.createElement("li");
     li.textContent = name;
     if (destroyed) li.classList.add("destroyed");
     return li;
   }
 
-  showShips(board, selector) {
-    const gameboard = this.getGameboardElement(selector);
+  static showShips(board, selector) {
+    const gameboard = UI.getGameboardElement(selector);
     board.ships.forEach((ship) => {
       ship.positions.forEach((id) => {
-        const cell = this.getCellElement(gameboard, selector, id);
+        const cell = UI.getCellElement(gameboard, selector, id);
         cell.classList.add("ship");
       });
     });
   }
 
-  clearShipList(shiplist) {
+  static clearShipList(shiplist) {
     const lis = [...shiplist.querySelectorAll("li")];
     lis.forEach((li) => li.remove());
   }
 
-  clearHits(gameboard) {
+  static clearHits(gameboard) {
     const hits = [...gameboard.querySelectorAll(".hit")];
     hits.forEach((e) => e.classList.remove("hit"));
   }
 
-  clearMisses(gameboard) {
+  static clearMisses(gameboard) {
     const hits = [...gameboard.querySelectorAll(".miss")];
     hits.forEach((e) => e.classList.remove("miss"));
   }
 
-  showHits(board, selector) {
-    const gameboard = this.getGameboardElement(selector);
-    this.clearHits(gameboard);
+  static showHits(board, selector) {
+    const gameboard = UI.getGameboardElement(selector);
+    UI.clearHits(gameboard);
     board.hits.forEach((id) => {
-      const cell = this.getCellElement(gameboard, selector, id);
+      const cell = UI.getCellElement(gameboard, selector, id);
       cell.classList.add("hit");
     });
   }
 
-  showMisses(board, selector) {
-    const gameboard = this.getGameboardElement(selector);
-    this.clearMisses(gameboard);
+  static showMisses(board, selector) {
+    const gameboard = UI.getGameboardElement(selector);
+    UI.clearMisses(gameboard);
     board.misses.forEach((id) => {
-      const cell = this.getCellElement(gameboard, selector, id);
+      const cell = UI.getCellElement(gameboard, selector, id);
       cell.classList.add("miss");
     });
   }
 
-  showShipNames(ships, selector) {
-    const shiplist = this.getShiplistElement(selector);
-    this.clearShipList(shiplist);
+  static showShipNames(ships, selector) {
+    const shiplist = UI.getShiplistElement(selector);
+    UI.clearShipList(shiplist);
     ships.forEach((ship) => {
-      const li = this.makeShipListLi(ship.ship.name, ship.ship.isSunk());
+      let name;
+      let sunk = false;
+      if(ship.ship === undefined) {
+        name = ship.name;
+      } else {
+        name = ship.ship.name;
+        sunk = ship.ship.isSunk();
+      }
+
+      const li = UI.makeShipNameLi(name, sunk);
       shiplist.append(li);
     });
   }
 
-  showGameOver(name) {
+  static showGameOver(name) {
     const winstatus = document.querySelector('#winstatus');
     const winner = winstatus.querySelector('#winner');
     winner.textContent = `${name} wins!`;
     winstatus.classList.remove('hide');
   }
 
-  getGameboardElement = (selector) =>
+  static getGameboardElement = (selector) =>
     document.querySelector(`#gameboard-${selector}`);
 
-  getShiplistElement = (selector) =>
+  static getShiplistElement = (selector) =>
     document.querySelector(`#shiplist-${selector}`);
 
-  getCellElement = (gameboard, selector, id) =>
+  static getCellElement = (gameboard, selector, id) =>
     gameboard.querySelector(`#${selector}${id}`);
 }
 
