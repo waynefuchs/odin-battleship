@@ -76,6 +76,7 @@ const removeFromAvailable = (board, x, y) => {
 };
 
 const cellsWrap = (board, startId, endId, vertical) => {
+  if(endId >= board.width * board.height) return true;
   return vertical
     ? board.cellXY(startId).at(0) !== board.cellXY(endId).at(0)
     : board.cellXY(startId).at(1) !== board.cellXY(endId).at(1);

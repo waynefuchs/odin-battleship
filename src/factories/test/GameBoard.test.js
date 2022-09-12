@@ -176,7 +176,9 @@ test("shipCellIds only returns an array if the ship won't wrap", () => {
   expect(board.shipCellIds(shipObj)).toContain(7);
   expect(board.shipCellIds(shipObj)).toContain(17);
   expect(board.shipCellIds(shipObj)).toContain(27);
+});
 
+test("shipCellIds can not extend past end of board", () => {
   // check to ensure false is returned when going off end of board
   shipObj = {ship, length:ship.length, x:7, y:8, vertical:true};
   expect(board.shipCellIds(shipObj)).toBe(false);
