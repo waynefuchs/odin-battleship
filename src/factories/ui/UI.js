@@ -1,5 +1,7 @@
 const CELL_CLASSES = ["cell", "target"];
 
+let ROTATION_DIRECTION = false;
+
 class UI {
   static initializeBoard(board, selector, callback = null) {
     const boardDiv = UI.getGameboardElement(selector);
@@ -13,15 +15,24 @@ class UI {
 
   static placeShipInitialize(player, selector) {
     const gameboard = this.getGameboardElement(selector);
+    document.addEventListener("keydown", (event) => {
+      if(event.key === 'r' || event.key === 'R') {
+        ROTATION_DIRECTION = !ROTATION_DIRECTION;
+        console.log(ROTATION_DIRECTION)
+      }
+    });
     [...gameboard.children].forEach((div) => {
       const id = Number(div.id.slice(selector.length));
       div.addEventListener("mouseenter", () => {
         this.clearPreview(gameboard);
         const [x, y] = player.board.cellXY(id);
-        const ids = player.getNextShipIds(x, y, false);
+        const ids = player.getNextShipIds(x, y, ROTATION_DIRECTION);
         this.setPreview(gameboard, selector, ids);
         console.log(ids);
       });
+      div.addEventListener("mouseleave", () => {
+        this.clearPreview(gameboard);
+      })
     });
   }
 
