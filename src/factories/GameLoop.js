@@ -12,16 +12,13 @@ class GameLoop {
 
     UI.initializeBoard(this.humanPlayer.board, "placeboats");
     UI.showShipNames(this.humanPlayer.unplacedShips, "placeboats");
+    UI.placeShipInitialize(this.humanPlayer, "placeboats");
 
-
+    return;
     UI.setPlayerName(this.humanPlayer.name, "friend");
     UI.initializeBoard(this.humanPlayer.board, "friend");
     UI.setPlayerName(this.aiPlayer.name, "foe");
-    UI.initializeBoard(
-      this.aiPlayer.board,
-      "foe",
-      this.playerFinishedTurn
-    );
+    UI.initializeBoard(this.aiPlayer.board, "foe", this.playerFinishedTurn);
 
     this.updateUI();
     // debug
@@ -46,14 +43,11 @@ class GameLoop {
 
   nextUnplacedShip = () => this.humanPlayer.unplacedShips.at(0);
 
-  placePiece = (x,y) => {
-
-  }
+  placePiece = (x, y) => {};
 
   updatePlacingUI() {
     UI.updateBoard(this.humanPlayer.board, "placeboats", true);
   }
-
 }
 
 module.exports = GameLoop;

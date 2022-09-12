@@ -57,9 +57,12 @@ class GameBoard {
     if (shipObj.vertical === undefined)
       throw new Error("Ship vertical specification must be defined");
     const startId = this.cellId(shipObj.x, shipObj.y);
-    return shipObj.vertical
+    const ids = shipObj.vertical
       ? [...Array(shipObj.length)].fill(startId).map((n, i) => n + i * 10)
       : [...Array(shipObj.length).keys()].map((n) => n + startId);
+    return cellsWrap(this, ids.at(0), ids.at(-1), shipObj.vertical)
+      ? false
+      : ids;
   };
 }
 
@@ -70,6 +73,12 @@ const removeFromAvailable = (board, x, y) => {
   if (newArray.length === board.available.length)
     throw new Error("Failed to remove from available list of ids");
   board.available = newArray;
+};
+
+const cellsWrap = (board, startId, endId, vertical) => {
+  return vertical
+    ? board.cellXY(startId).at(0) !== board.cellXY(endId).at(0)
+    : board.cellXY(startId).at(1) !== board.cellXY(endId).at(1);
 };
 
 const isHit = (board, shipObj, x, y) =>

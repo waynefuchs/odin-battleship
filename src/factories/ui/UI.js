@@ -11,6 +11,20 @@ class UI {
     }
   }
 
+  static placeShipInitialize(player, selector) {
+    const gameboard = this.getGameboardElement(selector);
+    [...gameboard.children].forEach((div) => {
+      const id = Number(div.id.slice(selector.length));
+      div.addEventListener("mouseenter", () => {
+        this.clearPreview(gameboard);
+        const [x, y] = player.board.cellXY(id);
+        const ids = player.getNextShipIds(x, y, false);
+        this.setPreview(gameboard, selector, ids);
+        console.log(ids);
+      });
+    });
+  }
+
   static setPlayerName(name, selector) {
     const h1 = document.querySelector(`#name-${selector}`);
     h1.textContent = name;
@@ -39,7 +53,7 @@ class UI {
       if (!parentDiv.classList.contains("enabled")) return;
       if (!cell.classList.contains("target")) return;
       if (board.haveAllShipsBeenDestroyed()) {
-        parentDiv.classList.remove('enabled');
+        parentDiv.classList.remove("enabled");
         return;
       }
 
@@ -65,6 +79,21 @@ class UI {
         const cell = UI.getCellElement(gameboard, selector, id);
         cell.classList.add("ship");
       });
+    });
+  }
+
+  static clearPreview(gameboard) {
+    const selected = [...gameboard.querySelectorAll(".preview")];
+    selected.forEach((e) => e.classList.remove("preview"));
+  }
+
+  static setPreview(gameboard, selector, ids) {
+    if(!ids) return;
+    ids.forEach((id) => {
+      const div = gameboard.querySelector(`#${selector}${id}`);
+      if (div !== null) {
+        div.classList.add("preview");
+      }
     });
   }
 
@@ -107,7 +136,7 @@ class UI {
     ships.forEach((ship) => {
       let name;
       let sunk = false;
-      if(ship.ship === undefined) {
+      if (ship.ship === undefined) {
         name = ship.name;
       } else {
         name = ship.ship.name;
@@ -120,10 +149,10 @@ class UI {
   }
 
   static showGameOver(name) {
-    const winstatus = document.querySelector('#winstatus');
-    const winner = winstatus.querySelector('#winner');
+    const winstatus = document.querySelector("#winstatus");
+    const winner = winstatus.querySelector("#winner");
     winner.textContent = `${name} wins!`;
-    winstatus.classList.remove('hide');
+    winstatus.classList.remove("hide");
   }
 
   static getGameboardElement = (selector) =>

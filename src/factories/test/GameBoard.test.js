@@ -161,3 +161,16 @@ test("Vertical ships also work", () => {
   expect(hit.ship.isSunk()).toBe(true);
   expect(board.isHit(3, 0)).toBe(false);
 });
+
+
+test.only("shipCellIds only returns an array if the ship won't wrap", () => {
+  let shipObj = {ship, length:ship.length, x:8, y:0, vertical:false};
+  let ids = board.shipCellIds(shipObj);
+  expect(ids).toBe(false);
+
+  shipObj = {ship, length:ship.length, x:7, y:0, vertical:false};
+  expect(board.shipCellIds(shipObj)).toContain(7);
+  expect(board.shipCellIds(shipObj)).toContain(8);
+  expect(board.shipCellIds(shipObj)).toContain(9);
+
+});
