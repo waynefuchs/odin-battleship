@@ -1,5 +1,8 @@
 const CELL_CLASSES = ["cell", "target"];
 
+// A 'Quick and Dirty' solution here, as I know the
+// React lessons are starting in the next lesson.
+// The assignment says not to worry about UI, just get it done
 let ROTATION_DIRECTION = false;
 
 class UI {
@@ -13,27 +16,42 @@ class UI {
     }
   }
 
-  static placeShipInitialize(player, selector) {
+  static placeShipInitialize(player, selector, callbackComplete) {
     const gameboard = this.getGameboardElement(selector);
+
+    // Handle keyboard rotation
     document.addEventListener("keydown", (event) => {
-      if(event.key === 'r' || event.key === 'R') {
+      if (event.key === "r" || event.key === "R") {
         ROTATION_DIRECTION = !ROTATION_DIRECTION;
-        console.log(ROTATION_DIRECTION)
       }
     });
+
+    // Add event listener for
     [...gameboard.children].forEach((div) => {
       const id = Number(div.id.slice(selector.length));
+      const [x, y] = player.board.cellXY(id);
+      //  mousenter
       div.addEventListener("mouseenter", () => {
         this.clearPreview(gameboard);
-        const [x, y] = player.board.cellXY(id);
         const ids = player.getNextShipIds(x, y, ROTATION_DIRECTION);
         this.setPreview(gameboard, selector, ids);
-        console.log(ids);
       });
+      // `mouseleve
       div.addEventListener("mouseleave", () => {
         this.clearPreview(gameboard);
-      })
+      });
+      // `click
+      div.addEventListener("click", () => {
+        player.placeNextUnplacedShip(x, y, ROTATION_DIRECTION);
+        UI.updatePlacingUI(player, selector);
+        if (player.isDonePlacingShips()) callbackComplete();
+      });
     });
+  }
+
+  static updatePlacingUI(player, selector) {
+    UI.showShips(player.board, selector);
+    UI.showShipNames(player.unplacedShips, selector);
   }
 
   static setPlayerName(name, selector) {
@@ -54,8 +72,6 @@ class UI {
     const htmlId = `${selector}${id}`;
     CELL_CLASSES.forEach((c) => cell.classList.add(c));
     cell.id = htmlId;
-    // TODO: REMOVE
-    cell.textContent = id;
 
     if (callback === null) return cell;
 
@@ -99,7 +115,7 @@ class UI {
   }
 
   static setPreview(gameboard, selector, ids) {
-    if(!ids) return;
+    if (!ids) return;
     ids.forEach((id) => {
       const div = gameboard.querySelector(`#${selector}${id}`);
       if (div !== null) {
@@ -164,6 +180,19 @@ class UI {
     const winner = winstatus.querySelector("#winner");
     winner.textContent = `${name} wins!`;
     winstatus.classList.remove("hide");
+  }
+
+  static removeElementAndChildren(selector) {
+    const element = document.querySelector(selector);
+    while (element.lastChild) element.removeChild(element.lastChild);
+    element.remove();
+    console.log("DON!");
+  }
+
+  static setHide(selector, isHidden) {
+    const element = document.querySelector(selector);
+    if (isHidden) element.classList.add("hide");
+    else element.classList.remove("hide");
   }
 
   static getGameboardElement = (selector) =>

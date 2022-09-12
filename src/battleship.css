@@ -6,9 +6,11 @@
   --c-hover: rgb(172, 129, 50);
   --c-hit: rgb(117, 48, 48);
   --c-miss: #302626;
-  --c-bg: #2e2a2ad0;
+  /* --c-bg: #2e2a2ad0; */
+  --c-bg: #2e2a2a;
   --c-border: #111111;
   --c-text: #cccccc;
+  --c-place: #487e38;
   --gap: 2vmin;
 }
 
@@ -42,6 +44,10 @@ h1{
 
 .board-width {
   width: calc((100vmin - (var(--gap) * 3)) / 2);
+}
+
+.center-align {
+  text-align: center;
 }
 
 .centered {
@@ -80,7 +86,7 @@ h1{
 }
 
 #shiplist-placeboats>:first-child {
-  background-color: var(--c-miss);
+  background-color: var(--c-place);
   font-size: x-large;
   border-radius: var(--gap);
   margin: var(--gap);
@@ -104,6 +110,10 @@ h1{
 .cell.ship {
   background-color: var(--c-ship);
   border: 1px solid var(--c-border);
+}
+
+.cell.ship.preview {
+  background-color: var(--c-hit);
 }
 
 .cell.miss {

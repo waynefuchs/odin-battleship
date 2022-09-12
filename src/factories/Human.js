@@ -32,6 +32,8 @@ class Human extends Player {
 
     return true;
   }
+
+  isDonePlacingShips = () => this.unplacedShips.length <= 0;
 }
 
 module.exports = Human;
