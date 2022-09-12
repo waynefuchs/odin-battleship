@@ -9,7 +9,7 @@
   --c-bg: #2e2a2ad0;
   --c-border: #111111;
   --c-text: #cccccc;
-  --gap: 2vw;
+  --gap: 2vmin;
 }
 
 * {
@@ -36,15 +36,27 @@ h1{
   text-align: center;
 }
 
-.side-by-side-height {
-  height: calc((100vw - (var(--gap) * 3)) / 2);
+.board-height {
+  height: calc((100vmin - (var(--gap) * 3)) / 2);
 }
+
+.board-width {
+  width: calc((100vmin - (var(--gap) * 3)) / 2);
+}
+
+.centered {
+  display: grid;
+  grid-template-columns: auto;
+  justify-content: center;
+}
+
 .side-by-side {
   display: grid;
-  grid-template-columns: auto auto;
-  width: 100vw;
+  grid-template-columns: 46vmin 46vmin;
   gap: var(--gap);
   padding: var(--gap);
+  justify-content: center;
+  width: 100%;
 }
 
 .shiplist {
@@ -52,9 +64,9 @@ h1{
   list-style-type: none;
 }
 
-.shiplist > li {
-  /* some prop */
-}
+/* .shiplist > li {
+  EMPTY LIST
+} */
 
 .shiplist > li.destroyed {
   text-decoration: line-through;
@@ -64,6 +76,14 @@ h1{
   display: grid;
   grid-template-columns: repeat(10, auto);
   border: 1px solid black;
+  cursor: pointer;
+}
+
+#shiplist-placeboats>:first-child {
+  background-color: var(--c-miss);
+  font-size: x-large;
+  border-radius: var(--gap);
+  margin: var(--gap);
 }
 
 .cell {
@@ -71,6 +91,10 @@ h1{
   background-color: grey;
   border: 1px solid var(--c-border);
   text-align: center;
+}
+
+.preview {
+  background-color: var(--c-hover);
 }
 
 .enabled>.cell.target:hover {
