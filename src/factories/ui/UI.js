@@ -186,7 +186,6 @@ class UI {
     const element = document.querySelector(selector);
     while (element.lastChild) element.removeChild(element.lastChild);
     element.remove();
-    console.log("DON!");
   }
 
   static setHide(selector, isHidden) {
